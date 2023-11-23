@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <input type="text" id="input" />
+  <button id="gen">gen</button>
+  <select name="fileName" id="fileName">
+    <option value="twitter_redirect.html">
+      twitter
+    </option>
+    <option value="deeplink.html">
+      deeplink
+    </option>
+  </select>
+  <div>
+  <textarea id="res" style="width: 1000px; height: 2000px;"></textarea>
+</div>
+  
+  <script>
+    let prefix = `https://auxin-admin.g123.jp`;
+    const input = document.querySelector('#input');
+    const gen = document.querySelector('#gen');
+    const select = document.getElementById('fileName')
+    gen.onclick = () => {
+      let value = input.value;
+      if (select.value === 'deeplink.html') {
+        prefix = `https://platform-sc.g123.jp/micro-app/auxin/landing-page`;
+        value = value.replace('https://', '')
+      } else {
+        prefix = `https://auxin-admin.g123.jp`
+      }
+      document.querySelector('#res').value += `${prefix}/${select.value}?callback=${encodeURIComponent(value)}\n\n`
+      input.value = '';
+    }
+  </script>
+</body>
+</html>

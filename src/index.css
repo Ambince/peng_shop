@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+*,
+::before,
+::after {
+  box-sizing: border-box; /* 1 */
+  border-width: 0; /* 2 */
+  border-style: solid; /* 2 */
+  border-color: theme('borderColor.DEFAULT', currentColor); /* 2 */
+}
+
+.start-level {
+  width: calc(100% - 5px);
+  left: 5px;
+}
+
+.end-level {
+  width: calc(100% - 5px);
+  right: 5px;
+}
+
+.one-level {
+  width: calc(100% - 10px);
+  right: 5px;
+  left: 5px;
+}
+
+.trigger-container > .ant-collapse-item > .ant-collapse-header {
+  background: #e6f4ff !important; /* @tag-bg-3 */
+  border-radius: 4px !important;
+}
+
+.ant-popover-inner-content {
+  max-width: 100%;
+  padding: 0 !important;
+  border-radius: 10px;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}

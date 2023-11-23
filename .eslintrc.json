@@ -1,0 +1,45 @@
+{
+  "plugins": ["react", "@typescript-eslint", "prettier", "import-helpers"],
+  "extends": ["@g123jp/eslint-config-react"],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "rules": {
+    "jsx-a11y/no-static-element-interactions": 0,
+    "@typescript-eslint/explicit-function-return-type": 0,
+    "react/jsx-no-useless-fragment": 0,
+    "no-plusplus": 0,
+    "camelcase": 0,
+    "react/require-default-props": 0,
+    "consistent-return": "off",
+    "prefer-destructuring": "off",
+    "no-restricted-syntax": "off",
+    "no-param-reassign": "off",
+    "react/no-array-index-key": "off",
+    "no-async-promise-executor": "off",
+    "no-await-in-loop": "off",
+    "no-constant-condition": "off",
+    "no-return-assign": "off",
+    "no-shadow": "off",
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": "off",
+    "no-use-before-define": "off",
+    "@typescript-eslint/no-shadow": "off",
+    "no-unused-expressions": "off",
+    "no-template-curly-in-string": "off",
+    "no-continue": "off"
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true
+  }
+}

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>G123</title>
+  </head>
+
+  <style>
+    html,
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: #f7f8fa;
+      margin: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .g123-redirect {
+      display: none;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    .g123-logo {
+      position: absolute;
+      top: 0;
+    }
+
+    .g123-icon {
+      width: 86px;
+    }
+
+    .g123-arrow {
+      position: absolute;
+      right: 10px;
+      bottom: 10px;
+    }
+
+    .g123-guide {
+      max-width: 500px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      width: 100%;
+    }
+
+    .g123-guide__title {
+      padding: 0 20px;
+      font-size: 14px;
+      color: #000;
+      text-align: center;
+      margin: 17px 0 0 0;
+      line-height: 22px;
+      font-weight: 400;
+    }
+
+    .g123-guide__desc {
+      padding: 0 20px;
+      font-size: 12px;
+      color: #00000073;
+      margin: 0 0 17px 0;
+      line-height: 22px;
+      font-weight: 400;
+    }
+
+    .g123-guide-icon {
+      object-fit: contain;
+      width: 100%;
+    }
+  </style>
+
+  <body>
+    <div id="g123-redirect" class="g123-redirect">
+      <img class="g123-logo" src="./g123.svg" />
+      <img class="g123-arrow" src="./arrow.svg" />
+      <div class="g123-guide">
+        <img class="g123-icon" src="./g123-icon.png" />
+        <h2 class="g123-guide__title">
+          ブラウザーを開いてゲームスタート！
+        </h2>
+        <p class="g123-guide__desc">アイコンをタップしてください</p>
+        <img class="g123-guide-icon" src="./guide.png" />
+      </div>
+    </div>
+
+    <script>
+      // redirect
+      const { search } = window.location;
+      const query = new URLSearchParams(search);
+      let callbackUrl = query.get('callback');
+
+      function getParmas(url) {
+        var temp1 = url.split('?');
+        var pram = temp1[1];
+        var keyValue = pram.split('&');
+        var obj = {};
+        for (var i = 0; i < keyValue.length; i++) {
+          var item = keyValue[i].split('=');
+          var key = item[0];
+          var value = item[1];
+          obj[key] = value;
+        }
+        return obj;
+      }
+
+      if (callbackUrl) {
+        const allParams = getParmas(window.location.href);
+
+        Object.keys(allParams).forEach((param) => {
+          if (param !== 'callback') {
+            callbackUrl += `&${param}=${allParams[param]}`;
+          }
+        });
+      }
+
+      function judgeClient() {
+        let client = '';
+        if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) {
+          client = 'IOS';
+        } else if (/(Android)/i.test(navigator.userAgent)) {
+          client = 'Android';
+        } else {
+          client = 'PC';
+        }
+        return client;
+      }
+
+      const client = judgeClient();
+      const isTwitterWebview = /(t\.co)/.test(document.referrer);
+
+      let access = true;
+      if (client === 'IOS' && isTwitterWebview) {
+        access = false;
+        const container = document.getElementById('g123-redirect');
+        container.style.display = 'flex';
+      }
+
+      if (access && callbackUrl) {
+        window.location.replace(callbackUrl);
+      }
+    </script>
+  </body>
+</html>

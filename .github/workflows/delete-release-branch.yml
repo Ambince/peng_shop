@@ -1,0 +1,18 @@
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  delete-branch:
+    if: startsWith(github.head_ref, 'v/')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete Branch
+        run: |
+          BRANCH_NAME=${{ github.head_ref }}
+          REPO_FULLNAME=G123-jp/g123-cp-publisher
+
+          curl -X DELETE \
+            -H "Authorization: token ${{ secrets.CICD_TOKEN }}" \
+            https://api.github.com/repos/$REPO_FULLNAME/git/refs/heads/$BRANCH_NAME

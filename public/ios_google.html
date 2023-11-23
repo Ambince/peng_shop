@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      const { search } = window.location;
+      const query = new URLSearchParams(search);
+      let callbackUrl = query.get('callback');
+
+      function getNativeApp(url) {
+        const source = url.searchParams.get('utm_source');
+        if (
+          /((?:fban\/fbios|fb_iab\/fb4a)(?!.+fbav)|;fbav\/([\w.]+);)/i.test(
+            window.navigator.userAgent,
+          )
+        ) {
+          return 'facebook';
+        }
+        if (/\b(line)\/([\w.]+)\/iab/i.test(window.navigator.userAgent)) {
+          // Ignore Line
+          return '';
+        }
+        if (/YJApp/i.test(window.navigator.userAgent)) {
+          // Ignore Yahoo
+          return '';
+        }
+        if (source === 'maio') {
+          return 'maio';
+        }
+        if (source === 'twitter') {
+          return 'twitter';
+        }
+        if (
+          url.searchParams.get('utm_campaign')?.includes('NewDisplayAndApp')
+        ) {
+          return 'campaign';
+        }
+        // WebView;
+        // const rules = [
+        //   'WebView',
+        //   'Android.*(;\\s+wv|Version/\\d.\\d\\s+Chrome/\\d+(\\.0){3})',
+        //   'Linux; U; Android',
+        // ];
+        // const webviewRegExp = new RegExp(`(${rules.join('|')})`, 'ig');
+        // if (window.navigator.userAgent.match(webviewRegExp)) {
+        //   return 'webview';
+        // }
+        return '';
+      }
+
+      function openLinkInBrowser(url, nativeApp) {
+        if (!nativeApp) {
+          return url;
+        };
+        const key = 'from_native';
+        if (url.searchParams.get(key)) {
+          return url;
+        };
+        url.searchParams.set(key, nativeApp);
+        const intentUrl = url.href.replace('https://', 'intent://');
+        const link = `${intentUrl}#Intent;scheme=https;S.browser_fallback_url=${url.href};end`;
+        return link;
+      }
+
+      function getParmas(url) {
+        var temp1 = url.split('?');
+        var pram = temp1[1];
+        var keyValue = pram.split('&');
+        var obj = {};
+        for (var i = 0; i < keyValue.length; i++) {
+          var item = keyValue[i].split('=');
+          var key = item[0];
+          var value = item[1];
+          obj[key] = value;
+        }
+        return obj;
+      }
+
+      function judgeClient() {
+        let client = '';
+        if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) {
+          client = 'IOS';
+        } else if (/(Android)/i.test(navigator.userAgent)) {
+          client = 'Android';
+        } else {
+          client = 'PC';
+        }
+        return client;
+      }
+
+      if (callbackUrl) {
+        const allParams = getParmas(window.location.href);
+
+        Object.keys(allParams).forEach((param) => {
+          if (param !== 'callback') {
+            callbackUrl += `&${param}=${allParams[param]}`;
+          }
+        });
+        const client = judgeClient();
+
+        if (client === 'IOS') {
+          window.location.replace(`googlechrome://${callbackUrl}`);
+
+          setTimeout(() => {
+            window.location.href = `https://${callbackUrl}`;
+          }, 1000);
+        } else if (client === 'Android') {
+          const originalUrl = `https://${callbackUrl}`;
+
+          const url = new URL(originalUrl);
+          const nativeApp = getNativeApp(url);
+          const link = openLinkInBrowser(url, nativeApp);
+          window.location.replace(link);
+        } else {
+          window.location.href = `https://${callbackUrl}`;
+        }
+      }
+    </script>
+  </body>
+</html>
